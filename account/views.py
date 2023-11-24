@@ -26,12 +26,10 @@ class InstagramSignupView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
+            user = form.save()
             bio = form.cleaned_data["bio"]
-            email = form.cleaned_data["email"]
             profile_pic = form.cleaned_data['profile_pic']
-            profile = UserProfile.objects.create(user=user,bio=bio,email=email,
+            profile = UserProfile.objects.create(user=user,bio=bio,
                                    profile_pic=profile_pic)
             profile.save()
             return HttpResponse("success")

@@ -1,28 +1,26 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import UserProfile
-from django import forms
 from django.contrib.auth.models import User
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 
-class ProfileForm(forms.ModelForm):
+class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['bio', 'email', 'profile_pic']
+        fields = ['bio', 'profile_pic']
 
 
-class SignUpForm(UserCreationForm, ProfileForm):
-    bio = forms.CharField(max_length=200)
-    email = forms.EmailField()
-    profile_pic = forms.ImageField()
+class SignUpForm(UserCreationForm):
+    bio = forms.CharField(max_length=500, required=False)
+    profile_pic = forms.ImageField(required=False)
+
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2','bio',
-                  'email', 'profile_pic']
-
-    # profile = ProfileForm()
+        fields = ['username', 'email', 'password1', 'password2', 'bio',
+                  'profile_pic']
 
 
 class LoginForm(AuthenticationForm):
     class Meta:
-        model = UserProfile
+        model = User
         fields = ['username', 'password']
