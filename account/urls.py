@@ -1,7 +1,7 @@
 from django.urls import path
-from . views import InstagramLoginView, InstagramSignupView
+from . views import InstagramLoginView, InstagramSignUpView
 
 urlpatterns = [
     path('login/', InstagramLoginView.as_view(), name='login'),
-    path('signup/', InstagramSignupView.as_view(), name='signup'),
+    path('signup/', InstagramSignUpView.as_view(), name='signup'),
 ]
