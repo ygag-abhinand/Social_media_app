@@ -19,7 +19,6 @@ class InstagramLoginView(LoginView):
 class InstagramSignUpView(View):
     http_method_names = ['get', 'post']
     template_name = 'login_register.html'
-    model = UserProfile
     form_class = SignUpForm
 
     def get(self, request, *args, **kwargs):
@@ -27,7 +26,11 @@ class InstagramSignUpView(View):
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST, request.FILES)
+        if request.FILES:
+            files = request.FILE
+        else:
+            files = None
+        form = self.form_class(request.POST, files)
         if form.is_valid():
             user = form.save()
             bio = form.cleaned_data['bio']
