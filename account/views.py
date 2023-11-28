@@ -1,16 +1,18 @@
 from django.contrib.auth.views import LoginView
-from .models import UserProfile
+from .models import UserProfile, Post
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.views.generic import View
-from .forms import LoginForm, SignUpForm
+from django.views.generic import View, CreateView
+from .forms import LoginForm, SignUpForm, PostForm
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class InstagramLoginView(LoginView):
     template_name = 'login_register.html'
+    # next_page =
     model = User
-    form_class = LoginForm
+    # form_class = LoginForm
 
     def form_valid(self, form):
         return HttpResponse('User login Successful!')
@@ -41,3 +43,12 @@ class InstagramSignUpView(View):
             return HttpResponse('User registration successful!!')
         else:
             return HttpResponse('Registration failed!!')
+
+
+class CreatePostView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'post_creation.html'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
