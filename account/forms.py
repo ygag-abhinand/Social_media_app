@@ -29,5 +29,5 @@ class SignUpForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     class Meta:
-        model = UserProfile
+        model = User
         fields = ['username', 'password']
