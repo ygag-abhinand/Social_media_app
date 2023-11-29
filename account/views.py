@@ -24,7 +24,7 @@ class InstagramSignupView(CreateView):
 
 
     def get_form(self, form_class=form_class):
-        
+
     def form_invalid(self, form):
         super().form_valid(form)
         return HttpResponse('Registration failed!!')
