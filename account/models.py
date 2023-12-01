@@ -24,4 +24,4 @@ class Post(models.Model):
                                primary_key=True, unique=True)
 
     def __str__(self):
-        return self.profile.owner.username
+        return self.caption

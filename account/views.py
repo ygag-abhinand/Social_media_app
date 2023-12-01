@@ -48,7 +48,7 @@ class CreateInstaPostView(CreateView, LoginRequiredMixin):
     model = Post
     template_name = 'login_register.html'
     fields = ['media', 'caption']
-    success_url = 'login'
+    success_url = '/login'
 
     def form_valid(self, form):
         super().form_valid(form)
