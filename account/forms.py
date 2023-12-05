@@ -10,15 +10,29 @@ class ProfileForm(forms.ModelForm):
         fields = ['bio', 'profile_pic']
 
 
+# class SignUpForm(UserCreationForm):
+#     bio = forms.CharField(max_length=200, required=False)
+#     email = forms.EmailField()
+#     profile_pic = forms.ImageField(required=False)
+#
+#     class Meta:
+#         model = User
+#         fields = ['username', 'email', 'password1', 'password2', 'bio',
+#                   'profile_pic']
+
 class SignUpForm(UserCreationForm):
-    bio = forms.CharField(max_length=200, required=False)
-    email = forms.EmailField()
-    profile_pic = forms.ImageField(required=False)
+    username = forms.CharField(required=True, label="",
+                               widget=forms.TextInput(attrs={
+                                   'placeholder': 'Enter your User name'}))
+    email = forms.EmailField(required=True, label="", widget=forms.TextInput(
+        attrs={'placeholder': 'Your email'}))
+    password1 = forms.CharField(required=True, label="",
+                                widget=forms.PasswordInput(
+                                    attrs={'placeholder': 'password'}))
+    password2 = forms.CharField(required=True, label="",
+                                widget=forms.PasswordInput(
+                                    attrs={'placeholder': 'Confirm password'}))
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'bio',
-                  'profile_pic']
-
-
-
+        fields = ['username', 'email', 'password1', 'password2']

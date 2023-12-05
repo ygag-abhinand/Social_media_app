@@ -26,9 +26,12 @@ class CreateInstaPostView(CreateView, LoginRequiredMixin):
 
 
 @login_required(login_url='login')
-def updateInstaPost(request, pk):
+def updateInstaPost(request):
     user = request.user
-    profile = user.userprofile_set.get(owner=user)
-    print(profile, '=========')
-    post = profile.post_set.get(id=pk)
+    pr = UserProfile.objects.get(owner=user)
+    for i in Post.objects.filter(profile=pr):
+        print(i.pk)
+    # profile = user.userprofile_set.get(owner=user)
+    # print(profile, '=========')
+    # post = profile.post_set.get(id=pk)
     return HttpResponse('Successful!!')
