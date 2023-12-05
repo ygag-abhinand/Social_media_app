@@ -7,7 +7,7 @@ from .models import UserProfile
 
 
 class InstagramLoginView(LoginView):
-    template_name = 'login_register.html'
+    template_name = 'login.html'
 
     def form_valid(self, form):
         super().form_valid(form)
