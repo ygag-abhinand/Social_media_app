@@ -1,0 +1,12 @@
+.form-box {
+  max-width: 300px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-field {
+  margin-bottom: 10px;
+}
+
