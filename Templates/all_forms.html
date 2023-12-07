@@ -5,11 +5,11 @@
 
 {% if page == 'login' %}
 <br><br>
-  <div class="form-box">
+  <div class="form-box" >
     <h2>Login</h2>
     <link rel="stylesheet" type="text/css" href="{% static 'styles/login.css' %}">
   <!--   This 'action' attribute specifies the URL to which the form data will be sent when the form is submitted -->
-    <form method="post" action="{% url 'login' %}">
+    <form method="post" action="{% url 'login' %}" >
       {% csrf_token %}
   <!--    This renders the label for the form field and input field for the 'username' field-->
       <div class="form-field">
@@ -19,6 +19,42 @@
         {{ form.password.label_tag }} {{ form.password }}
       </div>
       <input type="submit" value="Login">
+    </form>
+  </div>
+{% elif page == 'edit' %}
+<br><br>
+  <div class="form-box">
+    <h2>Edit Profile</h2>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/login.css' %}">
+  <!--   This 'action' attribute specifies the URL to which the form data will be sent when the form is submitted -->
+    <form method="post" action="{% url 'edit-profile' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+  <!--    This renders the label for the form field and input field for the 'username' field-->
+      <div class="form-field">
+        {{ form.profile_pic.label_tag }} {{ form.profile_pic }}
+      </div>
+      <div class="form-field">
+        {{ form.bio.label_tag }} {{ form.bio }}
+      </div>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+{% elif page == 'create' %}
+<br><br>
+  <div class="form-box">
+    <h2>Create Post</h2>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/login.css' %}">
+  <!--   This 'action' attribute specifies the URL to which the form data will be sent when the form is submitted -->
+    <form method="post" action="{% url 'create' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+  <!--    This renders the label for the form field and input field for the 'username' field-->
+      <div class="form-field">
+        {{ form.media.label_tag }} {{ form.media }}
+      </div>
+      <div class="form-field">
+        {{ form.caption.label_tag }} {{ form.caption }}
+      </div>
+      <input type="submit" value="Post">
     </form>
   </div>
 {% else %}

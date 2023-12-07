@@ -10,16 +10,6 @@ class ProfileForm(forms.ModelForm):
         fields = ['bio', 'profile_pic']
 
 
-# class SignUpForm(UserCreationForm):
-#     bio = forms.CharField(max_length=200, required=False)
-#     email = forms.EmailField()
-#     profile_pic = forms.ImageField(required=False)
-#
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'password1', 'password2', 'bio',
-#                   'profile_pic']
-
 class SignUpForm(UserCreationForm):
     username = forms.CharField(required=True, label="",
                                widget=forms.TextInput(attrs={

@@ -1,0 +1,11 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>Profile</h2>
+    <img src="{{profile.profile_pic.url}}" alt="Profile Picture">
+    <p>{{ user }}</p>
+    <p>{{profile.bio}}</p>
+    <a href="{% url 'login' %}">Add Post</a>
+    <a href="{% url 'signup' %}">Edit Profile</a>
+{% endblock %}

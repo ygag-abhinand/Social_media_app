@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
             name='UserProfile',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('profile_pic', models.ImageField(blank=True, null=True, upload_to='')),
+                ('profile_pics', models.ImageField(blank=True, null=True, upload_to='')),
                 ('bio', models.TextField(blank=True)),
                 ('owner', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

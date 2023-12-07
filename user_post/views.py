@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 class CreateInstaPostView(CreateView, LoginRequiredMixin):
     model = Post
-    template_name = 'login_register.html'
+    template_name = 'all_forms.html'
     fields = ['media', 'caption']
     success_url = '/login'
 
@@ -23,6 +23,11 @@ class CreateInstaPostView(CreateView, LoginRequiredMixin):
     def form_invalid(self, form):
         super().form_invalid(form)
         return HttpResponse('Unsuccessful!!')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page'] = 'create'
+        return context
 
 
 @login_required(login_url='login')
