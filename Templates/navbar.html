@@ -8,16 +8,28 @@
 
   </header>
 
-
 <body>
-
 <nav class="navbar" >
   <div class="container-fluid">
     <a class="navbar-brand"><img src="{% static 'images/instagram_logo.png' %}" height="60px" width="150px" alt="Instagram Logo" /></a>
-    <form class="d-flex" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      {% if user.is_authenticated %}
+      <a class="navbar-brand" href="{% url 'profile' pk=user.userprofile.pk %}">
+      {% if user.userprofile.profile_pic %}
+          <img src="{{ user.userprofile.profile_pic.url }}" class="rounded-circle" style="max-width: 80px; max-height: 80px; object-fit: cover;" alt="Profile Image">
+      {% else %}
+          <img src="{% static 'images/user-default.png' %}" alt="Default Profile Image">
+      {% endif %}
+      </a>
+              <button class="btn btn-outline-primary" type="submit"><a href="{% url 'home' %}">Home</a></button>
+              <button class="btn btn-outline-danger" type="submit"><a href="{% url 'log-out' %}">Log-out</a></button>
+
+    <form class="d-flex" role="search" method="GET" action="{% url 'home' %}">
+      <input class="form-control me-2" type="search" name="search" placeholder="Search Profiles" aria-label="Search">
       <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
+    {% endif %}
+
   </div>
 </nav>
 </body>
+

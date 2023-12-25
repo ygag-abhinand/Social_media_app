@@ -8,10 +8,15 @@ class UserProfile(models.Model):
                                     upload_to='profile_pic',
                                     default='user-default.png')
     bio = models.TextField(blank=True)
+    followers = models.ManyToManyField(User, related_name='followers',
+                                       blank=True)
+    following = models.ManyToManyField(User, related_name='following',
+                                       blank=True)
 
     def __str__(self):
         return self.owner.username
 
-
-
-
+    def update_follow_counts(self):
+        self.followers_count = self.followers.count()
+        self.following_count = self.following.count()
+        self.save()
