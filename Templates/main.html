@@ -6,6 +6,15 @@
 </head>
 <body>
 {% include 'navbar.html' %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        <div class="alert alert-primary" role="alert">
+                {{message}}
+        </div>
+    {% endfor %}
+</ul>
+{% endif %}
 {% block content %}
 {% endblock %}
 </body>

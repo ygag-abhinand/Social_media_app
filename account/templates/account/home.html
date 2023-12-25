@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+{% if page == 'feed' %}
+<h2 style="text-align:center;">Home Page</h2>
+    {% for feed in feeds %}
+    <div class="row">
+        <div class="col-sm-6" style="margin-left:35%" >
+             <h5><strong>{{ feed.owner_profile }}</strong></h5>
+            <img src="{{feed.post.media.url}}" alt="Post Image" height="500px" width="400px";>
+            <p><strong>{{ feed.owner_profile }}</strong>: {{ feed.post.caption }}</p>
+            <p>{{ feed.post.created_at|timesince }}</p>
+            <hr style=" margin-right:40%">
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <h2>Search Results</h2>
+    <ul>
+        {% for profile in searched_profiles %}
+            <li><a href="{% url 'profile' profile.id %}">{{ profile.username }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,34 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-2" style="margin-left:30px">
+        <h2>Profile</h2>
+        <img src="{{profile.profile_pic.url}}" alt="Profile Picture" width="220px" height="220px" class="rounded-circle">
+        <form method="post" action="{% url 'profile' profile.id %}">
+            {% if not is_own_profile %}
+                {% csrf_token %}
+                {% if is_following %}
+                <br>
+                    <button class="btn btn-outline-primary" type="submit" style="margin-left:70px">Unfollow</button>
+                {% else %}
+                <br>
+                    <button class="btn btn-outline-primary" type="submit" style="margin-left:70px">Follow</button>
+                {% endif %}
+            {% endif %}
+        </form>
+        <h2>{{profile.owner}}</h2>
+        <h6>{{posts.count}} Posts &nbsp;&nbsp;  |&nbsp;&nbsp;{{profile.followers.count}} Followers &nbsp;&nbsp;|&nbsp;&nbsp; <br>{{profile.following.count}} Following</h6>
+        <p>{{profile.bio}}</p>
+        <a href="{% url 'create' %}">Add Post</a>
+        <a href="{% url 'edit-profile' %}">Edit Profile</a>
+        <p>{{profile.posts}}</p>
+        {% for post in posts %}
+            <a href="{% url 'detail' post.post_id %}"><img src="{{post.media.url}}" alt="user post" width="220px" height="220px"></a>
+            <p>{{post.caption}}</p>
+            <p>{{post.created_at|timesince}} ago</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

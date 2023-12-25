@@ -1,0 +1,13 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+ <div class="col-sm-2" style="margin-left:30px">
+        <h2>Post Detail</h2>
+        <a href="{% url 'update' single_post.post_id %}">Edit Post</a>
+        <a href="{% url 'delete' single_post.post_id %}">Delete Post</a>
+        <img src="{{single_post.media.url}}" alt="Post Picture" width="220px" height="220px">
+        <p>{{single_post.caption}}</p>
+        <p>{{single_post.created_at}}</p>
+ </div>
+{% endblock %}
