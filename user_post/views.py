@@ -1,11 +1,13 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Post
+from .models import Post, Like, Comment
 from .forms import PostForm
 from account.models import UserProfile
 from django.urls import reverse_lazy
 from account.utils.constants import ALL_FORMS_TEMPLATE
 from django.views.generic import DetailView
+from django.shortcuts import redirect
+from django.views import View
 
 
 class CreateInstaPostView(CreateView, LoginRequiredMixin):
@@ -41,7 +43,7 @@ class UpdateInstaPostView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'pk':
-                                             self.request.user.userprofile.pk})
+                                            self.request.user.userprofile.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -55,6 +57,17 @@ class PostDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'single_post'
     pk_url_kwarg = 'pk'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.object
+        likes = Like.objects.filter(post=post)
+        comments = Comment.objects.filter(post=post)
+        liked_by_user = likes.filter(user=self.request.user).exists()
+        context['likes'] = likes
+        context['comments'] = comments
+        context['liked_by_user'] = liked_by_user
+        return context
+
 
 class DeletePostView(LoginRequiredMixin, DeleteView):
     template_name = 'user_post/delete_confirmation.html'
@@ -64,5 +77,43 @@ class DeletePostView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'pk':
-                                             self.request.user.userprofile.pk})
+                                            self.request.user.userprofile.pk})
+
+
+class PostLikeView(LoginRequiredMixin, View):
+    model = Like
+    fields = []
+    template_name = None
+
+    def post(self, request, *args, **kwargs):
+        post = Post.objects.get(post_id=kwargs['pk'])
+        is_liked = Like.objects.filter(post=post, user=request.user)
+        if is_liked.exists():
+            is_liked.delete()
+        else:
+            Like.objects.create(post=post, user=request.user)
+        post.like_count()
+        referer = request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
+        else:
+            return redirect('default_url_name')
+
+
+class PostCommentView(LoginRequiredMixin, View):
+    model = Comment
+    fields = []
+    template_name = None
+
+    def post(self, request, *args, **kwargs):
+        post = Post.objects.get(post_id=kwargs['pk'])
+        user_comment = request.POST.get('comment_text')
+        Comment.objects.create(post=post, user=request.user,
+                               text=user_comment)
+        post.comment_count()
+        referer = request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
+        else:
+            return redirect('default_url_name')
 

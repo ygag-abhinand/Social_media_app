@@ -7,9 +7,35 @@
     {% for feed in feeds %}
     <div class="row">
         <div class="col-sm-6" style="margin-left:35%" >
-             <h5><strong>{{ feed.owner_profile }}</strong></h5>
-            <img src="{{feed.post.media.url}}" alt="Post Image" height="500px" width="400px";>
-            <p><strong>{{ feed.owner_profile }}</strong>: {{ feed.post.caption }}</p>
+             <h5><strong><a href="{% url 'profile' feed.owner_profile.id %}">{{ feed.owner_profile }}</a></strong></h5>
+            <img src="{{feed.post.media.url}}" alt="Post Image" height="500px" width="400px">
+            <p><strong><a href="{% url 'profile' feed.owner_profile.id %}">{{ feed.owner_profile }}</a></strong>:{{ feed.post.caption }}</p>
+            <form method="post" action="{% url 'like' feed.post.post_id %}">
+              {% csrf_token %}
+              {% if feed.liked_by_user %}
+              <button type="submit" class="btn btn-danger">Unlike</button>
+             {% else %}
+             <button type="submit" class="btn btn-primary">Like</button>
+             {% endif %}
+                <br>
+            </form>
+            <form method="post" action="{% url 'comment' feed.post.post_id %}">
+              {% csrf_token %}
+              <textarea name="comment_text" placeholder="Add your comment"></textarea>
+              <button type="submit" style="margin-top:-20px">Comment</button>
+            </form>
+            {% if feed.post.like_count and feed.post.comment_count%}
+            <h6><strong>Likes</strong>:&nbsp;{{ feed.post.like_count }} &nbsp;&nbsp; <strong>Comments</strong>:&nbsp;{{ feed.post.comment_count }}</h6>
+            {% elif feed.post.like_count is None and feed.post.comment_count %}
+            <h6><strong>Likes</strong>: 0 &nbsp;&nbsp; <strong>Comments</strong>:&nbsp;{{ feed.post.comment_count }}</h6>
+            {% elif feed.post.like_count and feed.post.comment_count is None %}
+            <h6><strong>Likes</strong>:&nbsp;{{ feed.post.like_count }} &nbsp;&nbsp; <strong>Comments</strong>:&nbsp;{{ feed.post.comment_count }}</h6>
+            {% else %}
+            <h6><strong>Likes</strong>: 0&nbsp;&nbsp;<strong>Comments</strong>: 0</h6>
+            {% endif %}
+            {% for comment in feed.comments|slice:":2" %}
+            <p>{{ comment.user.username }}: {{ comment.text }}</p>
+            {% endfor %}
             <p>{{ feed.post.created_at|timesince }}</p>
             <hr style=" margin-right:40%">
         </div>
