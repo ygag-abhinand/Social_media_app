@@ -7,7 +7,33 @@
         <a href="{% url 'update' single_post.post_id %}">Edit Post</a>
         <a href="{% url 'delete' single_post.post_id %}">Delete Post</a>
         <img src="{{single_post.media.url}}" alt="Post Picture" width="220px" height="220px">
-        <p>{{single_post.caption}}</p>
+        <p><strong>{{ single_post.profile }}</strong>:&nbsp;{{ single_post.caption }}</p>
+         <form method="post" action="{% url 'like' single_post.post_id %}">
+                  {% csrf_token %}
+                  {% if liked_by_user %}
+                  <button type="submit" class="btn btn-danger">Unlike</button>
+                 {% else %}
+                 <button type="submit" class="btn btn-primary">Like</button>
+                 {% endif %}
+                    <br>
+                </form>
+                <form method="post" action="{% url 'comment' single_post.post_id %}">
+                  {% csrf_token %}
+                  <textarea name="comment_text" placeholder="Add your comment"></textarea>
+                  <button type="submit" style="margin-top:-20px">Comment</button>
+                </form>
+                {% if single_post.like_count and single_post.comment_count%}
+                <h6><strong>Likes</strong>:&nbsp;{{ single_post.like_count }} &nbsp;&nbsp; <strong>Comments</strong>:&nbsp;{{ single_post.comment_count }}</h6>
+                {% elif single_post.like_count is None and single_post.comment_count %}
+                <h6><strong>Likes</strong>: 0 &nbsp;&nbsp; <strong>Comments</strong>:&nbsp;{{ single_post.comment_count }}</h6>
+                {% elif single_post.like_count and single_post.comment_count is None %}
+                <h6><strong>Likes</strong>:&nbsp;{{ single_post.like_count }} &nbsp;&nbsp; <strong>Comments</strong>:&nbsp;{{ single_post.comment_count }}</h6>
+                {% else %}
+                <h6><strong>Likes</strong>: 0&nbsp;&nbsp;<strong>Comments</strong>: 0</h6>
+                {% endif %}
+                {% for comment in comments|slice:":2" %}
+                <p>{{ comment.user.username }}: {{ comment.text }}</p>
+                {% endfor %}
         <p>{{single_post.created_at}}</p>
  </div>
 {% endblock %}

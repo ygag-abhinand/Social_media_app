@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from account.utils.utils import search_profiles
+from user_post.models import Like, Comment
 
 
 class InstagramLoginView(LoginView):
@@ -117,8 +118,15 @@ class HomeView(LoginRequiredMixin, TemplateView):
             profile__owner__in=following_users).exclude(
             profile__owner=user_profile.owner).order_by(
             '-created_at')
-        feeds = [{'owner_profile': post.profile.owner, 'post': post} for post
-                 in posts]
+        feeds = []
+        for post in posts:
+            liked_by_user = Like.objects.filter(
+                post=post, user=request.user
+            ).exists()
+            comments = Comment.objects.filter(post=post)
+            feed_item = {'owner_profile': post.profile.owner, 'post': post,
+                         'liked_by_user': liked_by_user, 'comments': comments}
+            feeds.append(feed_item)
         search_query = request.GET.get('search', '')
         if search_query:
             searched_profiles = search_profiles(search_query)
