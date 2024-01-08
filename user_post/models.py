@@ -23,6 +23,7 @@ class Post(models.Model):
         self.like_count = Like.objects.filter(post=self).count()
         self.save()
 
+
     def comment_count(self):
         self.comment_count = Comment.objects.filter(post=self).count()
         self.save()

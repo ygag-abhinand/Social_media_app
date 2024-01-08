@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'account',
     'user_post',
     'rest_framework',
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,7 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+GRAPHENE = {
+    'SCHEMA': 'graph_ql.schema.schema',
+}
