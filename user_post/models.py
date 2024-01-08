@@ -1,3 +1,4 @@
+import graphene
 from django.db import models
 import uuid
 from django.core.validators import FileExtensionValidator
@@ -23,6 +24,7 @@ class Post(models.Model):
         self.like_count = Like.objects.filter(post=self).count()
         self.save()
 
+
     def comment_count(self):
         self.comment_count = Comment.objects.filter(post=self).count()
         self.save()
@@ -43,4 +45,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return '{}:{}'.format(self.user, self.text)
-
