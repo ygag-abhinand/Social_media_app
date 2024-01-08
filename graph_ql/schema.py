@@ -47,12 +47,12 @@ class PostType(DjangoObjectType):
     comment_count = graphene.Int()
     comments = graphene.List(CommentType)
 
-
     def resolve_like_count(self, info):
         return Like.objects.filter(post=self).count()
 
     def resolve_comment_count(self, info):
         return Comment.objects.filter(post=self).count()
+
     def resolve_comments(self, info):
         return Comment.objects.filter(post=self)
 
@@ -78,4 +78,100 @@ class Query(graphene.ObjectType):
         return Post.objects.filter(profile__in=user_id)
 
 
-schema = graphene.Schema(query=Query)
+class PostCreateMutation(graphene.Mutation):
+    class Arguments:
+        caption = graphene.String(required=True)
+        media = graphene.String(required=True)
+        user_id = graphene.ID(required=True)
+
+    post = graphene.Field(PostType)
+
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
+        caption = kwargs.get('caption')
+        media = kwargs.get('media')
+        user_id = kwargs.get('user_id')
+        profile = UserProfile.objects.get(pk=user_id)
+        post = Post(profile=profile, media=media, caption=caption)
+        post.save()
+        return PostCreateMutation(post=post)
+
+
+class PostUpdateMutation(graphene.Mutation):
+    class Arguments:
+        caption = graphene.String()
+        media = graphene.String()
+        post_id = graphene.ID(required=True)
+
+    post = graphene.Field(PostType)
+
+    @classmethod
+    def mutate(cls, root, info, caption, media, post_id):
+        post = Post.objects.get(pk=post_id)
+        if caption is not None:
+            post.caption = caption
+        if media is not None:
+            post.media = media
+        post.save()
+        return PostUpdateMutation(post=post)
+
+
+class PostDeleteMutation(graphene.Mutation):
+    class Arguments:
+        post_id = graphene.ID(required=True)
+
+    post = graphene.Field(PostType)
+
+    @classmethod
+    def mutate(cls, root, info, post_id):
+        post = Post.objects.get(pk=post_id)
+        post.delete()
+        return None
+
+
+class CommentMutation(graphene.Mutation):
+    class Arguments:
+        post_id = graphene.String(required=True)
+        text = graphene.String(required=True)
+        user_id = graphene.ID(required=True)
+
+    comment = graphene.Field(CommentType)
+
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
+        text = kwargs.get('text')
+        post_id = kwargs.get('post_id')
+        post = Post.objects.get(pk=post_id)
+        user_id = kwargs.get('user_id')
+        user = User.objects.get(pk=user_id)
+        comment = Comment(user=user, post=post, text=text)
+        comment.save()
+        return CommentMutation(comment=comment)
+
+
+class LikeMutation(graphene.Mutation):
+    class Arguments:
+        post_id = graphene.String(required=True)
+        user_id = graphene.ID(required=True)
+
+    like = graphene.Field(LikeType)
+
+    @classmethod
+    def mutate(cls, root, info, post_id, user_id):
+        post = Post.objects.get(pk=post_id)
+        user = User.objects.get(pk=user_id)
+        like = Like(user=user, post=post)
+        like.save()
+        return LikeMutation(like=like)
+
+
+class Mutation(graphene.ObjectType):
+    post = PostCreateMutation.Field()
+    post_update = PostUpdateMutation.Field()
+    post_delete = PostDeleteMutation.Field()
+    comment = CommentMutation.Field()
+    like = LikeMutation.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
+# 7910c2ae-fb2f-4f7a-b4a2-ecc2cd9373eb
